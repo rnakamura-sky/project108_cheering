@@ -57,7 +57,7 @@ $ git config --global user.name "Your Name"
 $ git config --global user.email you@example.com
 ~~~
 このリポジトリだけで使用したい設定の場合は
-するよう--globalを--localにして実行した。
+するよう--globalを指定しないで実行した。
 
 ## .gitignoreを作成
 gitで管理する時に、自動生成されるファイルや、データベース等の
