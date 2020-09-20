@@ -11,9 +11,27 @@ services:
             - redis
         volumes:
             - ./api:/home/project
-        
+        command: >
+            python manage.py runserver 0.0.0.0:8000
+    celery:
+        build: ./api
+        container_name: celery
+        depends_on:
+            - redis
+        volumes:
+            - ./api:/home/project
+        command: >
+            celery -A project108 worker -l info
     redis:
         image: redis
         container_name: redis
         expose:
             - 6379
+    test_worker:
+        build: ./test_worker
+        container_name: test-worker
+        ports:
+            - 8888:8888
+        volumes:
+            - ./test_worker/worker:/home/worker
+

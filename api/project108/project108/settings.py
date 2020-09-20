@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_results',    # 追加
     'account.apps.AccountConfig',   # 追加
+    'cheering.apps.CheeringConfig', # 追加
 ]
 
 MIDDLEWARE = [
@@ -123,3 +125,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 AUTH_USER_MODEL = 'account.User'
+
+# celeryの設定追加
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
