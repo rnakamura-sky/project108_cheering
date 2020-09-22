@@ -129,3 +129,6 @@ AUTH_USER_MODEL = 'account.User'
 # celeryの設定追加
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'
+
+# ログアウトリダイレクト先指定
+LOGOUT_REDIRECT_URL = 'account:login'

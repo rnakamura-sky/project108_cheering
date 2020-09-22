@@ -1,0 +1,17 @@
+<p>Hello</p>
+<div>user: {{ user }}</div>
+
+<form action="call/" method="post">
+    {% csrf_token %}
+    <ul>
+        {% for group in groups %}
+            {% for machine in group.machines.all %}
+                <li>
+                    <input type="radio" name="machine" id="machine{{ forloop.counter }}" value="{{ machine.id }}">
+                    <label for="machine{{ forloop.counter }}">[{{machine.pk}}]{{ machine.name }}: {{machine.address}}</label>
+                </li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+    <input type="submit" value="send">
+</form>

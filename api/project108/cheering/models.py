@@ -18,6 +18,9 @@ class Machine(models.Model):
     music = models.CharField('music', max_length=100)
     interval = models.FloatField('interval')
 
+    def __str__(self):
+        return f'{self.name} ({self.address})'
+
 class Group(models.Model):
 
     class GroupType(models.IntegerChoices):
@@ -30,6 +33,9 @@ class Group(models.Model):
     users = models.ManyToManyField(User, related_name='groups_users')
     machines = models.ManyToManyField(Machine, related_name='groups_machines')
 
+    def __str__(self):
+        return str(self.name)
+
 class Schedule(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     priority = models.IntegerField('priority')
@@ -37,10 +43,16 @@ class Schedule(models.Model):
     start_time = models.TimeField('start_time', default=datetime.time(0, 0, 0))
     end_time = models.TimeField('ent_time', default=datetime.time(0, 0, 0))
 
+    def __str__(self):
+        return f'{self.group.name} {self.priority} {self.enable} {self.start_time} {self.end_time}'
+
 class Count(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField('date_time', null=False)
     count = models.IntegerField('count')
+
+    def __str__(self):
+        return f'{self.date} {self.user.name} {self.count}'
 
 class RequestLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -48,6 +60,9 @@ class RequestLog(models.Model):
     request_at = models.DateTimeField('request_at')
     state = models.CharField('state', max_length=20)
     message = models.CharField('message', max_length=200)
+
+    def __str__(self):
+        return f'{self.user.name} {self.machine.name} {self.request_at}'
 
 
 class MachineOperation(models.Model):
@@ -61,3 +76,7 @@ class MachineOperation(models.Model):
     machine = models.ForeignKey(Machine, on_delete=models.SET_NULL, null=True)
     request_at = models.DateTimeField('request_at')
     state = models.IntegerField(choices=State.choices)
+
+    def __str__(self):
+        return f'{self.user.name} {self.machine.name} {self.request_at}'
+
