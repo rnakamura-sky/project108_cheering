@@ -49,10 +49,10 @@ class Schedule(models.Model):
 class Count(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField('date_time', null=False)
-    count = models.IntegerField('count')
+    count = models.IntegerField('count', default=0)
 
     def __str__(self):
-        return f'{self.date} {self.user.name} {self.count}'
+        return f'{self.date} {self.user.username} {self.count}'
 
 class RequestLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -62,7 +62,7 @@ class RequestLog(models.Model):
     message = models.CharField('message', max_length=200)
 
     def __str__(self):
-        return f'{self.user.name} {self.machine.name} {self.request_at}'
+        return f'{self.user.username} {self.machine.name} {self.request_at}'
 
 
 class MachineOperation(models.Model):
@@ -78,5 +78,5 @@ class MachineOperation(models.Model):
     state = models.IntegerField(choices=State.choices)
 
     def __str__(self):
-        return f'{self.user.name} {self.machine.name} {self.request_at}'
+        return f'{self.user.username} {self.machine.name} {self.request_at}'
 

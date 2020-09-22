@@ -1,6 +1,8 @@
 <p>Hello</p>
 <div>user: {{ user }}</div>
-
+{% if count %}
+    <div>count: {{ count.count }}</div>
+{% endif %}
 <form action="call/" method="post">
     {% csrf_token %}
     <ul>
@@ -15,3 +17,8 @@
     </ul>
     <input type="submit" value="send">
 </form>
+<ul>
+{% for log in latest_logs %}
+    <li>{{ log }}</li>
+{% endfor %}
+</ul>
