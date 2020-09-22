@@ -1,10 +1,10 @@
-from django.utils import timezone
 import datetime
+from django.utils import timezone
 
 from django.shortcuts import render, redirect
 
-from django.http import HttpResponse
 from celery.result import AsyncResult
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from cheering.tasks import run_machine
@@ -37,19 +37,41 @@ def index(request):
 def call(request):
     if request.POST:
         user = request.user
-        machine_id = request.POST['machine']
+
+        # 入力チェック
+        machine_id = request.POST.get('machine', None)
+        if not machine_id:
+            messages.warning(request, '操作するmachineを選択してください。')
+            return redirect('cheering:index')
+
         machine = Machine.objects.get(id=machine_id)
+
+        group = Group.objects.get(users=user, machines=machine)
+        if not group:
+            messages.warning(request, '指定されたmachineが存在しない、または操作することができません。')
+            return redirect('cheering:index')
+
+        # 回数制限チェック
+        day = datetime.date.today()
+        count, _ = Count.objects.get_or_create(user=user, date=day)
+        if count.count > 10:
+            messages.warning(request, '一日に実行できる回数をオーバーしています。')
+            state = 'OverCount'
+            message = '一日に実行できる回数をオーバーしています。'
+        else:
+            count.count = count.count + 1
+            count.save()
+            task_id = run_machine.delay(user.id, machine.id)
+            state = 'Recieve'
+            message = 'Requestを受け付けました。'
+
         log = RequestLog(
-            state = 'Request',
+            state = state,
             user = user,
             machine = machine,
             request_at = timezone.now(),
-            message = 'Requestを受け付けました。'
+            message = message
         )
         log.save()
-        day = datetime.date.today()
-        count = Count.objects.get_or_create(user=user, date=day)[0]
-        count.count = count.count + 1
-        count.save()
-        task_id = run_machine.delay(user.id, machine.id)
+
     return redirect('cheering:index')

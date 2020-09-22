@@ -1,7 +1,16 @@
-<p>Hello</p>
+<a href="{% url 'account:logout' %}">logout</a>
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 <div>user: {{ user }}</div>
 {% if count %}
-    <div>count: {{ count.count }}</div>
+    <div>today count: {{ count.count }}</div>
+{% else %}
+    <div>today count: 0</div>
 {% endif %}
 <form action="call/" method="post">
     {% csrf_token %}

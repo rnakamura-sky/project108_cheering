@@ -62,7 +62,7 @@ class RequestLog(models.Model):
     message = models.CharField('message', max_length=200)
 
     def __str__(self):
-        return f'{self.user.username} {self.machine.name} {self.request_at}'
+        return f'{self.user.username} {self.machine.name} {self.request_at} {self.message}'
 
 
 class MachineOperation(models.Model):
