@@ -26,7 +26,10 @@ SECRET_KEY = '2)pl-2^g$9@$amj*e3fgo9wa2%3-0d-p!vn_n7&7fc(0t$%3a8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# TODO:デプロイ環境ではセキュリティ面上'*'は使用しない。
+ALLOWED_HOSTS = [
+    '*',
+]
 
 
 # Application definition
